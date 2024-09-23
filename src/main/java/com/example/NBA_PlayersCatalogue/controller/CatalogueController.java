@@ -18,7 +18,7 @@ import com.example.NBA_PlayersCatalogue.entity.PlayerEntity;
 import com.example.NBA_PlayersCatalogue.service.PlayerService;
 
 @RestController
-@RequestMapping(path = "api/v1/players")
+@RequestMapping(path = "v1/players")
 public class CatalogueController {
 	
 	private final PlayerService playerService;
