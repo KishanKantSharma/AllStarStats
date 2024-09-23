@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.NBA_PlayersCatalogue.dto.ArticleDTO;
 import com.example.NBA_PlayersCatalogue.entity.PlayerEntity;
 import com.example.NBA_PlayersCatalogue.service.PlayerService;
+import com.example.NBA_PlayersCatalogue.service.interfaces.NewsService;
 
 @RestController
 @RequestMapping(path = "v1/players")
@@ -23,8 +25,11 @@ public class CatalogueController {
 	
 	private final PlayerService playerService;
 	
-	public CatalogueController(PlayerService playerService) {
+	private NewsService newsService; 
+	
+	public CatalogueController(PlayerService playerService, NewsService newsService) {
 		this.playerService = playerService; 
+		this.newsService = newsService;
 	}
 	
 	@GetMapping
@@ -53,7 +58,7 @@ public class CatalogueController {
 	@PostMapping
 	public ResponseEntity<PlayerEntity> addPlayer(@RequestBody PlayerEntity player){
 		PlayerEntity createdPlayer = playerService.addPlayer(player); 
-		return new ResponseEntity<PlayerEntity>(createdPlayer, HttpStatus.CREATED);
+		return new ResponseEntity<>(createdPlayer, HttpStatus.CREATED);
 	}
 	
 	@PutMapping
@@ -61,19 +66,29 @@ public class CatalogueController {
 		PlayerEntity response = playerService.updatePlayer(player);
 		
 		if(response != null) {
-			return new ResponseEntity<PlayerEntity>(response, HttpStatus.OK);
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		else {
-			return new ResponseEntity<PlayerEntity>(response, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		}
 	}
 	
 	@DeleteMapping("/{playerName}")
 	public ResponseEntity<String> deletePlayer(@PathVariable String playerName){
 		playerService.deletePlayer(playerName);
-		return new ResponseEntity<String>("Player Deleted Successdully.", HttpStatus.OK);
+		return new ResponseEntity<>("Player Deleted Successdully.", HttpStatus.OK);
 	}
 	
+	@GetMapping("/news")
+	public ResponseEntity<List<ArticleDTO>> getNews(){
+		List<ArticleDTO> articles;
+		
+		articles = newsService.getArticles();
+		
+		System.out.println("Articles response: " + articles);
+		
+		return new ResponseEntity<>(articles, HttpStatus.OK);
+	}
 }
 
 
